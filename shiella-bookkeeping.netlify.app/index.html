@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATMS Bookkeeping</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            background-color: #0056b3;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            background-color: #004494;
+            border-radius: 5px;
+        }
+
+        .logout-button {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #dc3545; /* Bootstrap danger color */
+            border-radius: 5px;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        /* Main Content */
+        .container {
+            display: flex;
+            justify-content: center;
+            padding: 30px 0;
+            margin-bottom: 0px;
+        }
+        .container-end {
+            display: flex;
+            justify-content: center;
+            padding: 100px 0;
+        }
+        .dashboard {
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .dashboard h2 {
+            color: #007bff;
+            text-align: center;
+            font-size: 35px;
+            margin-bottom: 50px;
+        }
+
+        .dashboard h4 {
+            color: #0056b3;
+            text-align: center;
+            font-size: 25px;
+            text-decoration: underline;
+        }
+
+        .dashboard h3 {
+            color: #0056b3;
+            text-align: center;
+            font-size: 25px;
+        }
+
+
+        .card-container {
+            display: flex;
+            flex-direction: row; /* Change direction to row */
+            justify-content: center; /* Center the cards horizontally */
+            align-items: center; /* Center the cards vertically */
+            margin-top: 30px;
+            margin-bottom: 30px;
+            margin-right: 50px;
+            margin-left: 50px;
+            gap: 30px; /* You can adjust this value for spacing between cards */
+        }
+
+        /* Card Icon */
+        .card-icon {
+            width: 30px; /* Set width of the icon */
+            height: 30px; /* Set height of the icon */
+            margin-right: 10px; /* Space between icon and text */
+            vertical-align: middle; /* Align the icon vertically with the text */
+            display: inline-block; /* Make it inline-block for proper alignment */
+        }
+
+        .card {
+            display: flex; /* Make the card a flex container */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* Center children vertically */
+            align-items: center; /* Center children horizontally */
+            background-color: #d6ddf5;
+            border-radius: 100px;
+            padding: 20px;
+            text-align: center;
+            flex: 1 1 30%; /* Cards take 30% of the width, adjust for smaller screens */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            min-width: 250px; /* Ensures a minimum size for cards */
+            text-decoration: none; /* Remove default underline */
+            color: inherit; /* Inherit text color */
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            color: #0056b3;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        /* Modal styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); /* Black background with transparency */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .employee-option {
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            background-color: #f4f7f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+
+        .employee-option:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Close button styling */
+        .close-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .close-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-button:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }        
+
+        /* User Details */
+        .user-details {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .user-details h3 {
+            margin: 0;
+            font-size: 30px;
+            color: #0056b3;
+        }
+
+        .user-details h4 {
+            margin: 5px 0;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+        .user-details p {
+            margin: 10px 0 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        Bookkeeping Services Management
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="https://sites.google.com/agilacebu.com/portal/home">ATMS Portal</a>
+        <a href="#">Client Database</a>
+        <a href="javascript:void(0);" class="logout-button" onclick="logout()">Log Out</a>
+    </div>
+
+    <!-- User Details -->
+    <div class="user-details">
+        <h3>Shiella Mae Ricabo</h3>
+        <h4>Project Coordinator</h4>
+        <p id="currentDateTime"></p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="dashboard">
+            <h3>Quick Tools</h3>
+            <div class="card-container">
+                <!-- Workload Planning -->
+                <a href="https://docs.google.com/spreadsheets/d/1cvH7nvkMPbV_LCTS-gycViW0O-Vsbf8RjW-stB8G-mg/edit?gid=6541153#gid=6541153" class="card">
+                    <h3>
+                        <img src="https://cdn-icons-png.flaticon.com/512/6713/6713297.png" alt="Workload Planning" class="card-icon"> Workload Planning
+                    </h3>
+                </a>
+
+                <!-- Masterlist -->
+                <a href="shiella-comp.html" class="card">
+                    <h3>
+                        <img src="https://cdn-icons-png.flaticon.com/512/2250/2250309.png" alt="Masterlist" class="card-icon"> Masterlist
+                    </h3>
+                </a>                                    
+
+            </div>
+            <div class="card-container">
+                <!-- Clients Folder -->
+                <a href="https://drive.google.com/drive/folders/14yKrgPjnbn-e3Q6koVw4OR6RpBJKFFzo?usp=sharing" class="card">
+                    <h3>
+                        <img src="https://www.freeiconspng.com/uploads/customers-icon-3.png" alt="Clients Folder" class="card-icon"> Clients Folder
+                    </h3>
+                </a>
+
+                <!-- Quickbooks -->
+                <a href="https://accounts.intuit.com/app/sign-in?app_group=QBO&asset_alias=Intuit.accounting.core.qbowebapp&app_environment=prod" class="card">
+                    <h3>
+                        <img src="https://iconape.com/wp-content/png_logo_vector/quickbooks.png" alt="Quickbooks" class="card-icon"> Quickbooks
+                    </h3>
+                </a>
+
+                <!-- Pancake -->
+                <a href="https://pancake.ph/dashboard" class="card">
+                    <h3>
+                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-Pancake-Pos.png" alt="Pancake" class="card-icon"> Pancake
+                    </h3>
+                </a>                                    
+
+
+            </div>
+
+        </div>        
+    </div>
+
+
+
+    <!-- Modal for Employee List -->
+    <div id="employeeModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Select Employee</h3>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1Spuue-ewUzkJYeCd-inZs37c9ftxOp3-Xf4SlUWRSTI/edit?usp=sharing">Lurna Mae Empis</div>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1cc7ue-L3_QMJuEbO7XgECkWnDILZtovvU6OaTDfwwZQ/edit?usp=sharing">Earl Marie Cereneo</div>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1I9dUZwHuYP7vmzDgIzgBvfdZGqjjmxK9K_OWanCTL5Q/edit?usp=sharing">Vergie Matin-ao</div>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1Blz4cMYwgllEcyD_N9LphSr7GBrJv0peWQi1j2AyXrk/edit?usp=sharing">Judy Mae Anter</div>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1mPrqzrKGiLK3HanGcy7MbdorPQbgAUjR1pVsZFq5lnc/edit?usp=sharing">Shiella Mae Ricabo</div>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1SnKX5hS6cjBJQgn69IeLwh6Ti_ofdK9i341EMSHiSa0/edit?usp=sharing">Niña Marie Bilono-ac</div>
+            <div class="employee-option" data-link="https://docs.google.com/spreadsheets/d/1zQpQI_RD6vde7EXLSPfx2NdnmVUvtwbYT_mqUAd1kng/edit?usp=sharing">Judy Ann Anter</div>
+            <!-- Styled Close Button -->
+            <div class="close-button-container">
+                <button class="close-button" onclick="closeModal()">Close</button>
+            </div>        
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <div class="footer">
+        © 2024 Agila Tax Management Services
+    </div>
+    <script>
+        function logout() {
+            window.open('', '_self', ''); // Required for window.close() to work
+            window.close(); // Closes the window
+        }
+        // Open modal when Time Sheets card is clicked
+        document.querySelector('.card[href="#"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('employeeModal').style.display = 'block';
+        });
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('employeeModal').style.display = 'none';
+        }
+
+        // Redirect to employee link when an option is clicked
+        document.querySelectorAll('.employee-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const link = this.getAttribute('data-link');
+                window.open(link, '_blank');
+            });
+        });
+
+        // Function to display current date and time
+        function updateDateTime() {
+            const date = new Date();
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            const currentDate = date.toLocaleDateString('en-US', options);
+            const currentTime = date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+            document.getElementById('currentDateTime').textContent = `${currentDate} | ${currentTime}`;
+        }
+
+        // Call the function when the page loads
+        window.onload = updateDateTime;
+
+    </script>
+</body>
+</html>
